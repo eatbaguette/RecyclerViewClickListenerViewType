@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.TextView
 import com.list_sample.minimumrecyclerview.R
 import com.list_sample.minimumrecyclerview.model.EvenNumberModel
@@ -19,14 +20,42 @@ class RecyclerViewAdapter(context: Context, private val itemList: List<Any>): Re
     val EVEN_NUMBER = 0
     val ODD_NUMBER = 1
 
+    lateinit var itemClickListener: OnItemClickListener
 
-    // ViewHolder
-    inner class EvenNumberHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val evenNumberCellText = itemView.findViewById<TextView>(R.id.even_number_cell_text)
+    interface OnItemClickListener {
+        fun onItemClick(view: View, position: Int)
     }
 
-    inner class OddNumberHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    fun setOnItemClickListener ( itemClickListener: OnItemClickListener) {
+        this.itemClickListener = itemClickListener
+    }
+
+
+
+
+    // ViewHolder
+    inner class EvenNumberHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        val evenNumberCellText = itemView.findViewById<TextView>(R.id.even_number_cell_text)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(p0: View?) {
+            itemClickListener.onItemClick(itemView, adapterPosition)
+        }
+    }
+
+    inner class OddNumberHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val oddNumberCellText = itemView.findViewById<TextView>(R.id.odd_number_cell_text)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(p0: View?) {
+            itemClickListener.onItemClick(itemView, adapterPosition)
+        }
     }
 
 
